@@ -3,30 +3,32 @@
 double calculateMean(vector<double> &x){
 
     double sum = 0.0;
-    int datasize  = x.size();
+    int sampleSize  = x.size();
     double mean;
     
     for(double value : x){
         sum += value;
     }
 
-    mean = sum/datasize;
+    mean = sum/sampleSize;
     
     return mean;
 }
 
 double calculateMedian(vector<double> &x){
 
-    int datasize = x.size();
+    int sampleSize = x.size();
+    double median;
+
     //sort
     sort(x.begin(), x.end());
-    double median;
-    // datasize & 1  = 1 --> odd
-    if(datasize & 1){
-        median = x[datasize/2];
+
+    // sampleSize & 1  = 1 --> odd
+    if(sampleSize & 1){
+        median = x[sampleSize/2];
     }
     else{
-        median = ( x[datasize/2 - 1] + x[datasize/2] ) / 2.0;
+        median = ( x[sampleSize/2 - 1] + x[sampleSize/2] ) / 2.0;
     }
     
     return median;
@@ -74,7 +76,7 @@ vector<double> calculateMode(vector<double> &x){
 
 double getMinimum(vector<double> &x){
     
-    double min = INT_MAX;
+    double min = INT_MAX - 0.1;
 
     for(double value : x){
         if(value < min){
@@ -87,7 +89,7 @@ double getMinimum(vector<double> &x){
 
 double getMaximum(vector<double> &x){
 
-    double max = INT_MIN;
+    double max = INT_MIN + 0.1;
 
     for(double value : x){
         if(value > max){
@@ -109,7 +111,7 @@ double calculateRange(vector<double> &x){
 
 double calculateVariance(vector<double> &x){
     
-    int datasize = x.size();
+    int sampleSize = x.size();
     double mean = calculateMean(x);
     double sumSquaredValues = 0.0; 
     double variance;
@@ -118,7 +120,7 @@ double calculateVariance(vector<double> &x){
         sumSquaredValues += value * value;
     }
 
-    variance = (sumSquaredValues - (datasize * mean * mean) )/ (datasize - 1);
+    variance = (sumSquaredValues - (sampleSize * mean * mean) )/ (sampleSize - 1);
 
     return variance;
 }
@@ -131,6 +133,60 @@ double calculateStandardDeviation(vector<double> &x){
     return standardDeviation;
 }
 
+
+double calculatePercentile(vector<double> &x, double percentile){
+    //sort
+    sort(x.begin(), x.end());
+    int sampleSize = x.size();
+    double percentileValue;
+    double rank = (sampleSize + 1) * (percentile / 100.0);
+    //check whether rank is a whole number or not 
+    if(rank - floor(rank) == 0.0){
+        percentileValue = x[rank-1];
+    }
+    else{
+        percentileValue = (x[rank-1] + x[rank]) / 2.0;
+    }
+
+    return percentileValue;
+}
+
+vector<double> calculateQuartiles(vector<double> &x){
+    
+    vector<double> quartiles;
+    quartiles.resize(3);
+
+    quartiles[0] = calculatePercentile(x, 25.0);
+    quartiles[1] = calculatePercentile(x, 50.0);
+    quartiles[2] = calculatePercentile(x, 75.0);
+
+    return quartiles;
+}
+
+vector<double> detectOutliers(vector<double>& x){
+    
+    vector<double> outliers;
+    double q1 = calculatePercentile(x, 25.0);
+    double q3 = calculatePercentile(x, 75.0);
+    
+    // Calculate Inter-Quartile Range(IQR)
+    double IQR = q3 - q1;
+    
+    // Define lower and upper bounds for outliers
+    double lowerBound = q1 - 1.5 * IQR;
+    double upperBound = q3 + 1.5 * IQR;
+    
+    // Detect outliers
+    for (double value : x) {
+        if (value < lowerBound || value > upperBound) {
+            outliers.push_back(value);
+        }
+    }
+    
+    return outliers;
+}
+
+
 void summarizeDataset(vector<double> &x,int size){
     
     double mean = calculateMean(x);
@@ -139,9 +195,12 @@ void summarizeDataset(vector<double> &x,int size){
     double range = calculateRange(x);
     double variance = calculateVariance(x);
     double standardDeviation = calculateStandardDeviation(x);
+    vector<double> quartiles = calculateQuartiles(x);
+    vector<double> outliers = detectOutliers(x);
 
-    cout << setprecision(4) << endl;
-    cout << "::Summary based on Measures of Central Tendency::" << endl;
+    setprecision(4);
+    //cout << setprecision(4) << endl;
+    cout << "\n::::Summary based on Measures of Central Tendency::::" << endl;
     cout << "Sample Mean: " << mean << endl;
     cout << "Sample Median: " << median << endl;
 
@@ -158,8 +217,22 @@ void summarizeDataset(vector<double> &x,int size){
 
     cout << endl << endl;
     
-    cout << "::Summary based on Measures of Disperse::" << endl;
+    cout << "::::Summary based on Measures of Disperse::::" << endl;
     cout << "Range of the dataset: " << range << endl; 
     cout << "Sample Variance: " << variance << endl;
     cout << "Sample Std. Deviation: " << standardDeviation << endl;
+    cout << "Quartiles:" << endl;
+    cout << "Q1 = " << quartiles[0] << " Q2 = " << quartiles[1] << " Q3 = " << quartiles[2] << endl;
+
+    cout << "Outliers:" << endl;
+
+    if(outliers.empty()){
+        cout << "No outliers detected!" << endl;
+    }
+    else{
+        for(double outlier : outliers){
+            cout << outlier << " ";
+        }
+        cout << endl;
+    }
 }

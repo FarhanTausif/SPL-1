@@ -4,7 +4,7 @@ void generateOneVariableDataset(vector<double> &x){
     srand(time(NULL));
     double randomValue;
     for(int i = 0; i < x.size(); ++i){
-        randomValue = (rand() % 51) / (double)(rand() % 10 + 1);
+        randomValue = (rand() % 501) / (double)(rand() % 10 + 1);
         x[i] = randomValue;
     }
 }
