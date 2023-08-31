@@ -140,6 +140,7 @@ double calculatePercentile(vector<double> &x, double percentile){
     int sampleSize = x.size();
     double percentileValue;
     double rank = (sampleSize + 1) * (percentile / 100.0);
+
     //check whether rank is a whole number or not 
     if(rank - floor(rank) == 0.0){
         percentileValue = x[rank-1];
@@ -166,8 +167,10 @@ vector<double> calculateQuartiles(vector<double> &x){
 vector<double> detectOutliers(vector<double>& x){
     
     vector<double> outliers;
-    double q1 = calculatePercentile(x, 25.0);
-    double q3 = calculatePercentile(x, 75.0);
+
+    vector<double> quartiles = calculateQuartiles(x);
+    double q1 = quartiles[0];
+    double q3 = quartiles[2];
     
     // Calculate Inter-Quartile Range(IQR)
     double IQR = q3 - q1;
@@ -199,7 +202,6 @@ void summarizeDataset(vector<double> &x,int size){
     vector<double> outliers = detectOutliers(x);
 
     setprecision(4);
-    //cout << setprecision(4) << endl;
     cout << "\n::::Summary based on Measures of Central Tendency::::" << endl;
     cout << "Sample Mean: " << mean << endl;
     cout << "Sample Median: " << median << endl;
