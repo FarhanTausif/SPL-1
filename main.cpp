@@ -1,5 +1,5 @@
-#include "../Data_Summarization/src/one_variable.cpp"
-#include "../Data_Summarization/src/data_summarization.cpp"
+#include "Data_Summarization/src/one_variable.cpp"
+#include "Data_Summarization/src/data_summarization.cpp"
 
 using namespace std;
 
