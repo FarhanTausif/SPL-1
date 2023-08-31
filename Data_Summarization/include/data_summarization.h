@@ -40,7 +40,6 @@ double calculateVariance(vector<double> &x);
 /// @brief summarize dataset based on the measures of Dispersion
 /// @param x vector of the dataset
 /// @return standard deviation
-
 double calculateStandardDeviation(vector<double> &x);
 
 /// @brief calculate percentile 
