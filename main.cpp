@@ -8,7 +8,7 @@ int main(){
     vector<double> x;
     int datasetSize;
     
-    cout << "---------------MODULE-1: DATA SUMMARIZATION---------------" << endl;
+    cout << "---------------   DATA SUMMARIZATION   ---------------" << endl;
     
     cout << "Enter the size of one variable dataset: " << endl;
     cin >> datasetSize;
@@ -16,7 +16,7 @@ int main(){
 
     generateOneVariableDataset(x); 
     writeOneVariableDatasetIntoFile(x);
-    summarizeDataset(x,datasetSize);
+    summarizeOneVariableDataset(x,datasetSize);
 
     return 0;
 }
