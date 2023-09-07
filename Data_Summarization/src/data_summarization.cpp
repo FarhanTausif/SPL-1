@@ -294,6 +294,8 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
     }
     double kurtosis = calculateKurtosis(x);
 
+    // can make different void functions just to print things 
+    //(e.g -> void summarization based on central tendency(mean, median, mode))
     setprecision(4);
     cout << "\n::::Summary based on Measures of Central Tendency::::" << endl;
     cout << "Sample Mean: " << mean << endl;
@@ -340,6 +342,9 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
     cout << endl << endl;
 
     cout << "::::Measures of Asymmetry & Tails heaviness or lightness compared to normal distribution::::" << endl;
+    
+    cout << "Skewness value: " << skewness << endl;
+    
     if(skewness > -0.5 && skewness < 0.5){
         cout << "The dataset is nearly symmetrical" << endl;
     }
@@ -355,7 +360,9 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
     else if(skewness > 1.0){
         cout << "The dataset is extremely positively skewed!" << endl;
     }
-
+    
+    cout << "Kurtosis value: " << kurtosis << endl;
+    // kurtosis --> 0.26 ig check from youtube and rewrite logic
     if(kurtosis > 2.8 && kurtosis < 3.2){
         cout << "The distribution of the dataset is: Mesokurtic(Normal Distribution)" << endl;
     }
