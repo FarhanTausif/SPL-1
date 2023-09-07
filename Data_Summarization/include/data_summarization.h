@@ -97,8 +97,13 @@ double calculateZScore(double value, double mean, double standardDeviation);
 /// @return outliers  
 vector<double> detectOutliersUsingZScore(vector<double> &x);
 
-/// @brief Summarize the dataset
-/// @param x 
-/// @param size
+/// @brief Summarizes One-Variable dataset
+/// @param x vector of the dataset
+/// @param size 
 void summarizeOneVariableDataset(vector<double> &x,int size);
 
+/// @brief summarizes Two-Variable dataset
+/// @param x vector of the dataset of X-Variable
+/// @param y vector of the dataset of Y-Variable
+/// @param size 
+void summarizeTwoVariableDataset(vector<double> &x, vector<double> &y, int size);
