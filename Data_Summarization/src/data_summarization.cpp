@@ -1,7 +1,6 @@
 #include "../include/data_summarization.h"
 
 double calculateMean(vector<double> &x){
-
     double sum = 0.0;
     int sampleSize  = x.size();
     double mean;
@@ -16,7 +15,6 @@ double calculateMean(vector<double> &x){
 }
 
 double calculateMedian(vector<double> &x){
-
     int sampleSize = x.size();
     double median;
 
@@ -35,7 +33,6 @@ double calculateMedian(vector<double> &x){
 }
 
 vector<double> calculateMode(vector<double> &x){
-    
     vector<double> modes;
     int maxFrequency = 0, frequency;
     bool hasModes = false;
@@ -75,7 +72,6 @@ vector<double> calculateMode(vector<double> &x){
 }
 
 double getMinimum(vector<double> &x){
-    
     double min = INT_MAX - 0.1;
 
     for(double value : x){
@@ -88,7 +84,6 @@ double getMinimum(vector<double> &x){
 }
 
 double getMaximum(vector<double> &x){
-
     double max = INT_MIN + 0.1;
 
     for(double value : x){
@@ -101,7 +96,6 @@ double getMaximum(vector<double> &x){
 }
 
 double calculateRange(vector<double> &x){
-    
     double maxValue = getMaximum(x); 
     double minValue = getMinimum(x);
     double range = (maxValue-minValue);
@@ -110,7 +104,6 @@ double calculateRange(vector<double> &x){
 }
 
 double calculateVariance(vector<double> &x){
-    
     int sampleSize = x.size();
     double mean = calculateMean(x);
     double sumSquaredValues = 0.0; 
@@ -126,13 +119,11 @@ double calculateVariance(vector<double> &x){
 }
 
 double calculateStandardDeviation(vector<double> &x){
-
     double variance = calculateVariance(x);
     double standardDeviation = sqrt(variance);
 
     return standardDeviation;
 }
-
 
 double calculateCoefficientOfVariation(vector<double> &x){
     double standardDeviation = calculateStandardDeviation(x);
@@ -163,7 +154,6 @@ double calculatePercentile(vector<double> &x, double percentile){
 }
 
 vector<double> calculateQuartiles(vector<double> &x){
-    
     vector<double> quartiles;
     quartiles.resize(3);
 
@@ -176,7 +166,6 @@ vector<double> calculateQuartiles(vector<double> &x){
 }
 
 vector<double> calculateDeciles(vector<double> &x){
-
     vector<double> deciles;
     deciles.resize(9);
     double percentile;
@@ -189,10 +178,9 @@ vector<double> calculateDeciles(vector<double> &x){
 }
 
 vector<double> detectOutliersUsingInterQuartileRange(vector<double>& x){
-    
     vector<double> outliersUsingInterQuartileRange;
-
     vector<double> quartiles = calculateQuartiles(x);
+    
     double q1 = quartiles[0];
     double q3 = quartiles[2];
 
@@ -215,7 +203,6 @@ double calculateZScore(double value, double mean, double standardDeviation){
 }
 
 vector<double> detectOutliersUsingZScore(vector<double> &x){
-    
     vector<double> outliersUsingZScore; 
     double mean;
     double standardDeviation;
@@ -235,7 +222,6 @@ vector<double> detectOutliersUsingZScore(vector<double> &x){
     return outliersUsingZScore;
 }
 
-
 double calculateSkewnessUsingPearsonsFirstMeasure(vector<double> &x, double mode){
     double skewness;
     double mean = calculateMean(x);
@@ -253,6 +239,20 @@ double calculateSkewnessUsingPearsonsSecondMeasure(vector<double> &x){
     return skewness;
 }
 
+void applyEmpiricalRule(vector<double> &x){
+    int size = x.size();
+    double mean = calculateMean(x);
+    double standardDeviation = calculateStandardDeviation(x);
+
+    int dataInsideOneStdDev = .68 * size;
+    int dataInsideTwoStdDev = .95 * size;
+    int dataInsideThreeStdDev = .997 * size;
+
+    cout << "Approximately " << dataInsideOneStdDev << " data-points(68%) lie within " << (mean - standardDeviation) << " to " << mean + standardDeviation << " Range" << endl;
+    cout << "Approximately " << dataInsideTwoStdDev << " data-points(95%) lie within " << (mean - 2*standardDeviation) << " to " << mean + 2*standardDeviation << " Range" << endl;
+    cout << "Approximately " << dataInsideThreeStdDev << " data-points(99.7%) lie within " << (mean - 3*standardDeviation) << " to " << mean + 3*standardDeviation << " Range" << endl;
+}
+
 double calculateQuartileDeviation(vector<double> &x){
     double quartileDeviation;
     vector<double> quartiles = calculateQuartiles(x);
@@ -260,6 +260,14 @@ double calculateQuartileDeviation(vector<double> &x){
     double q3 = quartiles[2];
     quartileDeviation = (q3 - q1)/2.0;
     return quartileDeviation;
+}
+
+double calculateCoefficientOfQuartileDeviation(vector<double> &x){
+    vector<double> quartiles = calculateQuartiles(x);
+    double q1 = quartiles[0];
+    double q3 = quartiles[3];
+    double coefficientOfQuartileDeviation = (q3 - q1) / (q3 + q1);
+    return coefficientOfQuartileDeviation;
 }
 
 double calculateKurtosis(vector<double> &x){
@@ -271,9 +279,44 @@ double calculateKurtosis(vector<double> &x){
     return kurtosis;
 }
 
+double calculateCovariance(vector<double> &x, vector<double> &y){
+    double meanX = calculateMean(x);
+    double meanY = calculateMean(y);
+    double Sx = calculateStandardDeviation(x);
+    double Sy = calculateStandardDeviation(y);
+    double Sxy = 0.0;
+    double n = x.size();
+    double covariance;
+    for(int i = 0; i < n; ++i){
+        Sxy += (x[i] - meanX) * (y[i] - meanY);
+    }
+    covariance = Sxy / (n-1);
+    return covariance;
+}
+
+double calculatePerasonsCorelationCoefficient(vector<double> &x, vector<double> &y){
+    double Sx = calculateStandardDeviation(x);
+    double Sy = calculateStandardDeviation(y);
+    double covariance = calculateCovariance(x, y);
+    double pearsonCorelationCoefficient;
+    pearsonCorelationCoefficient = covariance/ (Sx*Sy);
+    cout << "Covariance:" << covariance <<" Sx:" << Sx << " Sy:" << Sy << endl;
+    return pearsonCorelationCoefficient;
+}
+
+double calculateCohensD(vector <double> &x, vector<double> &y){
+    double meanX = calculateMean(x);
+    double meanY = calculateMean(y);
+    double varX = calculateVariance(x);
+    double varY = calculateVariance(y);
+    double n1 = x.size();
+    double n2 = y.size();
+    double pooledVariance = sqrt( ( ((n1-1) * varX) + ((n2-1)*varY) ) / ( n1 + n2 - 2 )); 
+    double cohensD = ( meanX - meanY ) / pooledVariance; 
+    return cohensD; 
+}
 
 void summarizeOneVariableDataset(vector<double> &x,int size){
-
     double mean = calculateMean(x);
     double median = calculateMedian(x);
     vector<double>modes = calculateMode(x);
@@ -296,8 +339,8 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
 
     // can make different void functions just to print things 
     //(e.g -> void summarization based on central tendency(mean, median, mode))
-    setprecision(4);
-    cout << "\n::::Summary based on Measures of Central Tendency::::" << endl;
+    cout << setprecision(4);
+    cout << "\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Summary based on Measures of Central Tendency::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl << endl;
     cout << "Sample Mean: " << mean << endl;
     cout << "Sample Median: " << median << endl;
 
@@ -326,14 +369,15 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
 
     cout << endl << endl;
     
-    cout << "::::Summary based on Measures of Dispersion::::" << endl;
+    cout << ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Summary based on Measures of Dispersion:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl << endl;
     cout << "Range of the dataset: " << range << endl; 
     cout << "Sample Variance: " << variance << endl;
     cout << "Sample Std. Deviation: " << standardDeviation << endl;
+    cout << "\nFive Number summary for Box-Plot:\n";
     cout << "Minimum data point: " << getMinimum(x) << endl; 
     cout << "Quartiles:" << endl;
     cout << "Lower Quartile, Q1 = " << quartiles[0] << "  Middle Quartile, Q2 = " << quartiles[1] << "  Upper Quartile, Q3 = " << quartiles[2] << endl;
-    cout << "Maximum data point:" << getMaximum(x) << endl;
+    cout << "Maximum data point:" << getMaximum(x) << endl << endl;
     cout << "Deciles:" << endl;
     for(double decile: deciles){
         cout << decile << " ";
@@ -341,7 +385,7 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
     
     cout << endl << endl;
 
-    cout << "::::Measures of Asymmetry & Tails heaviness or lightness compared to normal distribution::::" << endl;
+    cout << ":::::::::::::::::::::::::::::::::::::::::::::::Measures of Asymmetry & Tails heaviness or lightness compared to normal distribution::::::::::::::::::::::::::::::::::::::::::" << endl << endl;
     
     cout << "Skewness value: " << skewness << endl;
     
@@ -360,22 +404,27 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
     else if(skewness > 1.0){
         cout << "The dataset is extremely positively skewed!" << endl;
     }
-    
+
+    //if skewness tells that the dataset is nearly symmetrical, then applyEmpiricalRule
+    if(skewness > -0.5 && skewness < 0.5){
+        applyEmpiricalRule(x);
+    }
+
     cout << "Kurtosis value: " << kurtosis << endl;
-    // kurtosis --> 0.26 ig check from youtube and rewrite logic
-    if(kurtosis > 2.8 && kurtosis < 3.2){
+
+    if(kurtosis == 0.263){
         cout << "The distribution of the dataset is: Mesokurtic(Normal Distribution)" << endl;
     }
-    else if(kurtosis > 3.2){
+    else if(kurtosis > 0.263){
         cout << "The distribution of the dataset is: Leptokurtic(Long tailed distribution :: higher outliers)" << endl;
     }
-    else if(kurtosis < 2.8){
-        cout << "The distribution of the dataset is: Platykurtic(short tailed distribution :: fewer outliers)" << endl;
+    else if(kurtosis < 0.263){
+        cout << "The distribution of the dataset is: Platykurtic(Short tailed distribution :: fewer outliers)" << endl;
     }
 
-    cout << endl;
+    cout << endl << endl;
 
-    cout << "::::Outlier Detection::::" << endl;
+    cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Outlier Detection::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl << endl;
     cout << "Outliers(" << outliersUsingInterQuartileRange.size() << " values)" << " Using inter quartile range:"   << endl;
     if(outliersUsingInterQuartileRange.empty()){
         cout << "No outliers detected using IQR method!" << endl;
@@ -396,5 +445,39 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
             cout << outlier << " ";
         }
         cout << endl;
+    }
+}
+
+void summarizeTwoVariableDataset(vector<double> &x, vector<double> &y, int size){
+    double pearsonCorelationCoefficient = calculatePerasonsCorelationCoefficient(x,y);
+    double cohensD = calculateCohensD(x,y);
+    cout << "Pearson\'s corelation coefficient:" << pearsonCorelationCoefficient << endl;
+    if(pearsonCorelationCoefficient == 0){
+        cout << "The Sample data pairs are not co-related!" << endl;
+    }
+    else if(pearsonCorelationCoefficient > 0){
+        cout << "The sample data pairs are positively co-related!" << endl;
+    }
+    else{
+        cout << "The sample data pairs are negatively co-related!" << endl;
+    }
+    cout << "::::::::::::::::::::::::::::::::::::::::Summary Based on Cohen's d::::::::::::::::::::::::::::::::::::::::" << endl;
+    cout << "Cohen's d:" << cohensD << endl;
+    cout << "Effect-Size Magnitude Summary:" << endl;
+    if(fabs(cohensD) > 0.19 && fabs(cohensD) < 0.21){
+        cout << "The difference between the groups is relatively small, and there may be substantial overlap in their distributions!" << endl;
+    }
+    else if(fabs(cohensD) > 0.21 && fabs(cohensD) <= 0.5){
+        cout << "The difference is moderate, indicating a noticeable effect but with some overlap in the distributions!" << endl;
+    }
+    else if(fabs(cohensD) > 0.5){
+        cout << "The difference is substantial, and there is minimal overlap in the distributions. This suggests a strong effect!" << endl;
+    }
+    cout << "Interpretation of direction of effect:" << endl;
+    if(cohensD >= 0.0){
+        cout << "It indicates that the first group (X) has a higher mean than the second group (Y)." << endl;
+    }
+    else{
+        cout << "It indicates that the second group (Y) has a higher mean than the first group (X)." << endl;
     }
 }
