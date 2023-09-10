@@ -1,10 +1,7 @@
 #include<iostream>
 #include<vector>
 
-using std::vector;
-using std:: cout;
-using std:: cerr;
-using std:: endl;
+using namespace std;
 
 /// @brief generates a two-variable dataset
 /// @param x vector to hold the data set

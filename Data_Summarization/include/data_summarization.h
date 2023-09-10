@@ -5,10 +5,7 @@
 #include<climits>
 #include<iomanip> // to use setPrecision(value)
 
-using std::vector;
-using std:: cout;
-using std:: setprecision;
-using std:: endl;
+using namespace std;
 
 /// @brief calculates sample mean
 /// @param x vector of the single-variable dataset
@@ -100,7 +97,7 @@ double calculateCoefficientOfQuartileDeviation(vector<double> &x);
 /// @return kurtosis
 double calculateKurtosis(vector<double> &x);
 
-/// @brief detect outliers based on inter quartile range, if the dataset has any
+/// @brief detect outliers based on inter quartile range
 /// @param x vector of the single-variable dataset
 /// @return outliers 
 vector<double> detectOutliersUsingInterQuartileRange(vector<double> &x);
@@ -110,7 +107,7 @@ vector<double> detectOutliersUsingInterQuartileRange(vector<double> &x);
 /// @return z-score
 double calculateZScore(double value, double mean, double standardDeviation);
 
-/// @brief detect outliers based on z-statistic, if the dataset has any
+/// @brief detect outliers based on z-score
 /// @param x vector of the single-variable dataset
 /// @return outliers  
 vector<double> detectOutliersUsingZScore(vector<double> &x);
@@ -133,6 +130,26 @@ double calculatePerasonsCorelationCoefficient(vector<double> &x, vector<double> 
 /// @param y vector of Y variable 
 /// @return cohen's d
 double calculateCohensD(vector <double> &x, vector<double> &y);
+
+/// @brief calculates Hedge's g as an effect size measure
+/// @param x vector of X variable
+/// @param y vector of Y variable 
+/// @return hedge's g
+double calculateHedgesG(vector<double> &x, vector<double> &y);
+
+/// @brief calculates z-score
+/// @param xValue x value from the pair
+/// @param yValue y value from the pair
+/// @param Sx standard deviation of X vector
+/// @param Sy standard deviation of Y vector
+/// @return z-score
+double calculateZScore(double xValue, double yValue, double Sx, double Sy);
+
+/// @brief detects outliers based on z-score
+/// @param x vector of X variable
+/// @param y vector of Y variable 
+/// @return pairedOutliers
+vector<double> detectOutliersUsingZScore(vector<double> &x, vector<double> &y);
 
 /// @brief Summarizes One-Variable dataset
 /// @param x vector of the single-variable dataset
