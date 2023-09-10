@@ -316,6 +316,39 @@ double calculateCohensD(vector <double> &x, vector<double> &y){
     return cohensD; 
 }
 
+double calculateHedgesG(vector<double> &x, vector<double> &y){
+    double cohensD = calculateCohensD(x,y);
+    int n1 = x.size();
+    int n2 = y.size();
+    double hedgesG = cohensD * ( 1 - ( 3 / ( 4 * (n1 + n2) - 9 ) ) );
+    return hedgesG;
+}
+
+double calculateZScore(double xValue, double yValue, double Sx, double Sy){
+    double zScore = (xValue - yValue) / Sx + Sy;   
+    return zScore;
+}
+
+vector<double> detectOutliersUsingZScore(vector<double> &x, vector<double> &y){
+    if(x.size() != y.size()){
+        cerr << "Can't find outliers, as the two variables have different size" << endl;
+        return vector<double>();
+    }
+    double Sx = calculateStandardDeviation(x);
+    double Sy = calculateStandardDeviation(y);
+    double zScore;
+    double thresholdStdDev = 2.0;
+    vector<double> outliers; // for storing indices of paired outliers 
+
+    for(int i = 0; i < x.size(); ++i){
+        zScore = calculateZScore(x[i], y[i], Sx, Sy);
+        if(zScore > thresholdStdDev){
+            outliers.push_back(i);
+        }
+    }
+    return outliers;
+}
+
 void summarizeOneVariableDataset(vector<double> &x,int size){
     double mean = calculateMean(x);
     double median = calculateMedian(x);
@@ -324,6 +357,7 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
     double variance = calculateVariance(x);
     double standardDeviation = calculateStandardDeviation(x);
     double coefficientOfVariation = calculateCoefficientOfVariation(x);
+    double coefficientOfQuartileDeviation = calculateCoefficientOfQuartileDeviation(x);
     vector<double> quartiles = calculateQuartiles(x);
     vector<double> deciles = calculateDeciles(x);
     vector<double> outliersUsingInterQuartileRange = detectOutliersUsingInterQuartileRange(x);
@@ -451,6 +485,8 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
 void summarizeTwoVariableDataset(vector<double> &x, vector<double> &y, int size){
     double pearsonCorelationCoefficient = calculatePerasonsCorelationCoefficient(x,y);
     double cohensD = calculateCohensD(x,y);
+    vector<double> outliers = detectOutliersUsingZScore(x,y);
+
     cout << "Pearson\'s corelation coefficient:" << pearsonCorelationCoefficient << endl;
     if(pearsonCorelationCoefficient == 0){
         cout << "The Sample data pairs are not co-related!" << endl;
@@ -461,7 +497,7 @@ void summarizeTwoVariableDataset(vector<double> &x, vector<double> &y, int size)
     else{
         cout << "The sample data pairs are negatively co-related!" << endl;
     }
-    cout << "::::::::::::::::::::::::::::::::::::::::Summary Based on Cohen's d::::::::::::::::::::::::::::::::::::::::" << endl;
+    cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Summary Based on Cohen's d::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
     cout << "Cohen's d:" << cohensD << endl;
     cout << "Effect-Size Magnitude Summary:" << endl;
     if(fabs(cohensD) > 0.19 && fabs(cohensD) < 0.21){
@@ -480,4 +516,10 @@ void summarizeTwoVariableDataset(vector<double> &x, vector<double> &y, int size)
     else{
         cout << "It indicates that the second group (Y) has a higher mean than the first group (X)." << endl;
     }
+
+    cout << "Outliers:(" << outliers.size() << " values)" << endl;
+    for(int i = 0; i < outliers.size(); ++i){
+        cout << "(" << x[outliers[i]] << ", " << y[outliers[i]] << ")" << " ";
+    }
+    cout << endl;
 }
