@@ -70,3 +70,33 @@ void writeTwoVariableDatasetIntoFile(vector<double> &x, vector<double> &y){
     }
     fclose(fp);
 }
+
+void readTwoVariableDatasetFromTxtFile(vector<double> &x, vector<double> &y){
+    FILE *fp;
+    fp = fopen("oneVariableDataset.txt", "r");
+    while(!feof(fp)){
+        double x_var, y_var;
+        fscanf(fp,"%lf %lf", &x_var, &y_var);
+        x.push_back(x_var);
+        y.push_back(y_var);
+    }
+}
+
+void readTwoVariableDatasetFromCsvFile(vector<double> &x, vector<double> &y){
+    ifstream input;
+    input.open("twoVariableDataset.csv");
+    if(input.fail()){
+        cerr << "Unable to open the file!" <<  "twoVariableDataset.csv" << endl;
+        input.close();
+    }else{
+        double point1, point2;
+        while(input >> point1 >> point2){
+            x.push_back(point1);
+            y.push_back(point2);
+        }
+        // for(auto data : x) cout << data << " ";
+        // cout << endl;
+        // for(auto data : y) cout << data << " ";
+        input.close();
+    }
+}
