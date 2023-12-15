@@ -1,3 +1,6 @@
+#ifndef DATA_SUMMARIZATION_H
+#define DATA_SUMMARIZATION_H
+
 #include<iostream>
 #include<cmath>
 #include<algorithm>
@@ -161,3 +164,5 @@ void summarizeOneVariableDataset(vector<double> &x,int size);
 /// @param y vector of the single-variable dataset of Y-Variable
 /// @param size size of each vector
 void summarizeTwoVariableDataset(vector<double> &x, vector<double> &y, int size);
+
+#endif
