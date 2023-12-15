@@ -15,11 +15,12 @@ void oneSidedZTest(vector<double> &x, double null_hypothesis, double sigma){
     double alpha = 0.05;
     double confidence_interval = 1 - alpha;
     double z_alpha = 1.645;
-   
+    cout << "Z statistic, Z = " << z_statistic << endl;
+    cout << "Critical Value, z alpha = " << z_alpha << endl;
     if(z_statistic > z_alpha){
-        cout << "We can reject the Null hypothesis that the population mean is: " << null_hypothesis << endl;
+        cout << "We can reject the Null hypothesis that the population mean is: " << null_hypothesis << " using one sided z test." << endl;
     }else{
-        cout << "We fail to reject the Null hypothesis that the population mean is: " << null_hypothesis << endl;  
+        cout << "We fail to reject the Null hypothesis that the population mean is: " << null_hypothesis << " using one sided z test." << endl;  
     }
 }
 
@@ -31,16 +32,26 @@ void oneSidedZTest(vector<double> &x, vector<double> &y, double sigma_x, double 
     int m = y.size();
     double sigma = sqrt( ((pow(sigma_x, 2))/n) + ((pow(sigma_y, 2))/m) );
     double null_hypothesis = 0.0; // mu_X = mu_Y
-    double z_statistic = fabs((sample_mean - null_hypothesis) / sigma);
+    // if n and m are large then z_statistic is differently calculated
+    double z_statistic;
+    if(n > 30 and m > 30){
+        double var_x = calculateVariance(x);
+        double var_y = calculateVariance(y);
+        double sigma = var_x/n + var_y/m;
+        z_statistic = (sample_mean - null_hypothesis) / sqrt(sigma);
+    }else{
+        z_statistic = fabs((sample_mean - null_hypothesis) / sigma);
+    }
     double alpha = 0.05;
     double confidence_interval = 1 - alpha;
     double z_alpha = 1.645;
-   
+    cout << "Z statistic, Z = " << z_statistic << endl;
+    cout << "Critical Value, z alpha = " << z_alpha << endl;
     if(z_statistic > z_alpha){
-        cout << "We can reject the Null hypothesis that the two group has the same mean!" << endl;
+        cout << "We can reject the Null hypothesis that the population mean is: " << null_hypothesis << " using one sided z test." << endl;
     }else{
-        cout << "We fail to reject the Null hypothesis that the two group has the same mean!" << endl;  
-    }  
+        cout << "We fail to reject the Null hypothesis that the population mean is: " << null_hypothesis << " using one sided z test." << endl;  
+    } 
 }
 
 void twoSidedZTest(vector<double> &x, double null_hypothesis, double sigma){
@@ -49,12 +60,13 @@ void twoSidedZTest(vector<double> &x, double null_hypothesis, double sigma){
     double z_statistic = fabs((sample_mean - null_hypothesis) / (sigma / sqrt(n)));
     double alpha = 0.05;
     double confidence_interval = 1 - alpha/2;
-    double z_alpha_by_2 = calculateZAlphaByTwo(confidence_interval);
-   
+    double z_alpha_by_2 = 1.96;
+    cout << "Z statistic, Z = " << z_statistic << endl;
+    cout << "Critical Value, z alpha by 2 = " << z_alpha_by_2 << endl;
     if(z_statistic > z_alpha_by_2){
-        cout << "We can reject the Null hypothesis that the population mean is: " << null_hypothesis << endl;
+        cout << "We can reject the Null hypothesis that the population mean is: " << null_hypothesis << " using two sided z test." << endl;
     }else{
-        cout << "We fail to reject the Null hypothesis that the population mean is: " << null_hypothesis << endl;  
+        cout << "We fail to reject the Null hypothesis that the population mean is: " << null_hypothesis << " using two sided z test." << endl;  
     }
 }
 
@@ -78,12 +90,13 @@ void twoSidedZTest(vector<double> &x, vector<double> &y, double sigma_x, double 
     }
     double alpha = 0.05;
     double confidence_interval = 1 - alpha/2;
-    double z_alpha_by_2 = calculateZAlphaByTwo(confidence_interval);
-   
+    double z_alpha_by_2 = 1.96;
+    cout << "Z statistic, Z = " << z_statistic << endl;
+    cout << "Critical Value, z alpha by 2 = " << z_alpha_by_2 << endl;
     if(z_statistic > z_alpha_by_2){
-        cout << "We can reject the Null hypothesis that the two group has the same mean!" << endl;
+        cout << "We can reject the Null hypothesis that the population mean is: " << null_hypothesis << " using two sided z test." << endl;
     }else{
-        cout << "We fail to reject the Null hypothesis that the two group has the same mean!" << endl;  
+        cout << "We fail to reject the Null hypothesis that the population mean is: " << null_hypothesis << " using two sided z test." << endl;  
     }
 }
 
@@ -131,12 +144,13 @@ void oneSided_t_Test(vector<double> &x, double null_hypothesis){
     double alpha = 0.05;
     double t_value_of = alpha;
     int dof = n - 1;
-    double t_alpha = calculateTAlpha(t_value_of, dof, alpha);
-   
+    double t_alpha = calculateTAlpha(dof, alpha);
+    cout << "t statistic, T = " << t_statistic << endl;
+    cout << "Critical Value, t alpha= " << t_alpha << endl;
     if(t_statistic > t_alpha){
-        cout << "We can reject the Null hypothesis that the population mean is: " << null_hypothesis << endl;
+        cout << "We can reject the Null hypothesis that the population mean is: " << null_hypothesis << " using one sided t test." << endl;
     }else{
-        cout << "We fail to reject the Null hypothesis that the population mean is: " << null_hypothesis << endl;  
+        cout << "We fail to reject the Null hypothesis that the population mean is: " << null_hypothesis << " using one sided t test." << endl;  
     }
 }
 
@@ -154,13 +168,13 @@ void oneSided_t_Test(vector<double> &x, vector<double> &y){
     double null_hypothesis = 0.0; // muX = muY
     double t_statistic = fabs((sample_mean - null_hypothesis) / (pooled_dev * sqrt(1/n + 1/m)));
     double alpha = 0.05;
-    double t_value_of = alpha;
-    double t_alpha = calculateTAlpha(t_value_of, dof, alpha);
-   
+    double t_alpha = calculateTAlpha(dof, alpha);   
+    cout << "t statistic, T = " << t_statistic << endl;
+    cout << "Critical Value, t alpha= " << t_alpha << endl;
     if(t_statistic > t_alpha){
-        cout << "We can reject the Null hypothesis that the two group has the same mean!" << endl;
+        cout << "We can reject the Null hypothesis that the population mean is: " << null_hypothesis << " using one sided t test." << endl;
     }else{
-        cout << "We fail to reject the Null hypothesis that the two group has the same mean!" << endl;  
+        cout << "We fail to reject the Null hypothesis that the population mean is: " << null_hypothesis << " using one sided t test." << endl;  
     }
 }
 
@@ -170,14 +184,14 @@ void twoSided_t_Test(vector<double> &x, double null_hypothesis){
     int n = x.size();
     double t_statistic = fabs((sample_mean - null_hypothesis) / (sample_dev / sqrt(n)));
     double alpha = 0.05;
-    double t_value_of = alpha/2;
     int dof = n - 1;
-    double t_alpha_by_2 = calculateTAlpha(t_value_of, dof, alpha);
-   
+    double t_alpha_by_2 = calculateTAlpha(dof, alpha/2);   
+    cout << "t statistic, T = " << t_statistic << endl;
+    cout << "Critical Value, t alpha by 2= " << t_alpha_by_2 << endl;
     if(t_statistic > t_alpha_by_2){
-        cout << "We can reject the Null hypothesis that the population mean is: " << null_hypothesis << endl;
+        cout << "We can reject the Null hypothesis that the population mean is: " << null_hypothesis << " using two sided t test." << endl;
     }else{
-        cout << "We fail to reject the Null hypothesis that the population mean is: " << null_hypothesis << endl;  
+        cout << "We fail to reject the Null hypothesis that the population mean is: " << null_hypothesis << " using two sided t test." << endl;  
     }
 }
 void twoSided_t_Test(vector<double> &x, vector<double> &y){
@@ -194,13 +208,13 @@ void twoSided_t_Test(vector<double> &x, vector<double> &y){
     double null_hypothesis = 0.0; // muX = muY
     double t_statistic = fabs((sample_mean - null_hypothesis) / (pooled_dev * sqrt(1/n + 1/m)));
     double alpha = 0.05;
-    double t_value_of = alpha/2;
-    double t_alpha_by_2 = calculateTAlpha(t_value_of, dof, alpha);
-   
+    double t_alpha_by_2 = calculateTAlpha(dof, alpha/2);
+    cout << "t statistic, T = " << t_statistic << endl;
+    cout << "Critical Value, t alpha by 2= " << t_alpha_by_2 << endl;
     if(t_statistic > t_alpha_by_2){
-        cout << "We can reject the Null hypothesis that the two group has the same mean!" << endl;
+        cout << "We can reject the Null hypothesis that the population mean is: " << null_hypothesis << " using two sided t test." << endl;
     }else{
-        cout << "We fail to reject the Null hypothesis that the two group has the same mean!" << endl;  
+        cout << "We fail to reject the Null hypothesis that the population mean is: " << null_hypothesis << " using two sided t test." << endl;  
     }
 }
 
@@ -222,7 +236,7 @@ void read_t_Table(vector<vector<pair<double,double>>> &t_table){
     input.close();
 }
 
-double calculateTAlpha(double t_value_of, int dof, double alpha){
+double calculateTAlpha(int dof, double alpha){
     vector<vector<pair<double, double>>> t_table;
     read_t_Table(t_table);
     double t_alpha;
@@ -240,6 +254,8 @@ void f_test(vector<double> &x, vector<double> &y){
     int n = x.size() - 1;
     int m = y.size() - 1;
     double f_alpha = calculateFAlpha(m, n);
+    cout << "f statistic, F = " << f_statistic << endl;
+    cout << "Critical Value, f alpha = " << f_alpha << endl;
     if(f_statistic > f_alpha){
         cout << "We can reject the null hypothesis that two groups has the same variance!" << endl;
     }else{
@@ -262,6 +278,24 @@ double calculateFAlpha(int m, int n){
     map<pair<int, int>, double> f_table;
     readFTable(f_table);
     return f_table[{m,n}];
+}
+
+void paired_t_test(vector<double> &w){
+    double sample_mean = calculateMean(w);
+    double dev_w = calculateStandardDeviation(w);
+    int n = w.size();
+    double sigma = dev_w / sqrt(n);
+    double test_statistic = fabs(sample_mean / sigma);
+    double alpha = 0.05;
+    double confidence_interval = 1 - alpha/2;
+    double t_alpha_by_2 = calculateTAlpha(n-1,alpha/2);
+    cout << "Test statistic, Z = " << test_statistic << endl;
+    cout << "Critical value, t alpha by 2 = " << t_alpha_by_2 << endl;
+    if(test_statistic > t_alpha_by_2){
+        cout << "We can reject the null hypothesis that the two groups have the same mean!" << endl;
+    }else{
+        cout << "We fail to reject the null hypothesis that the two groups have the same mean!" << endl;
+    }
 }
 
 #endif
