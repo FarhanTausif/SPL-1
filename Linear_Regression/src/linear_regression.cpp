@@ -41,7 +41,7 @@ void linear_regression(vector<double> &x, vector<double> &y){
     cout << "The estimates of the parameters: " << endl;
     cout << "(";
     for(auto estimate : estimates) {
-        cout << estimate << "  ";
+        cout << estimate << " ";
     }
     cout << ")^T" << endl;
 }
