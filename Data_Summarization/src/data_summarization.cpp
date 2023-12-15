@@ -1,3 +1,6 @@
+#ifndef DATA_SUMMARIZATION_CPP
+#define DATA_SUMMARIZATION_CPP
+
 #include "../include/data_summarization.h"
 
 double calculateMean(vector<double> &x){
@@ -18,8 +21,15 @@ double calculateMedian(vector<double> &x){
     int sampleSize = x.size();
     double median;
 
-    //sort
-    sort(x.begin(), x.end());
+    for(int i = 0; i < sampleSize; ++i){
+        for(int j = i + 1; j < sampleSize; ++j){
+            if(x[i] > x[j]){
+                double temp = x[i];
+                x[i] = x[j];
+                x[j] = temp;
+            }
+        }
+    }
 
     // sampleSize & 1  = 1 --> odd
     if(sampleSize & 1){
@@ -114,7 +124,6 @@ double calculateVariance(vector<double> &x){
     }
 
     variance = (sumSquaredValues - (sampleSize * mean * mean) )/ (sampleSize - 1);
-
     return variance;
 }
 
@@ -135,9 +144,16 @@ double calculateCoefficientOfVariation(vector<double> &x){
 double calculatePercentile(vector<double> &x, double percentile){
     double percentileValue = 0.0;
     if(percentile > 0.0 && percentile <=100.0){
-        //sort
-        sort(x.begin(), x.end());
         int sampleSize = x.size();
+        for(int i = 0; i < sampleSize; ++i){
+            for(int j = i + 1; j < sampleSize; ++j){
+                if(x[i] > x[j]){
+                    double temp = x[i];
+                    x[i] = x[j];
+                    x[j] = temp;
+                }
+            }
+        }
         double rank = (sampleSize + 1) * (percentile / 100.0);
 
         //check whether rank is a whole number or not 
@@ -325,7 +341,7 @@ double calculateHedgesG(vector<double> &x, vector<double> &y){
 }
 
 double calculateZScore(double xValue, double yValue, double Sx, double Sy){
-    double zScore = (xValue - yValue) / Sx + Sy;   
+    double zScore = (xValue - yValue) / (Sx + Sy);   
     return zScore;
 }
 
@@ -374,7 +390,7 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
     // can make different void functions just to print things 
     //(e.g -> void summarization based on central tendency(mean, median, mode))
     cout << setprecision(4);
-    cout << "\n::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Summary based on Measures of Central Tendency::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl << endl;
+    cout << "\033[4m" << "\n\tSummary based on Measures of Central Tendency" << "\033[0m" << endl << endl;
     cout << "Sample Mean: " << mean << endl;
     cout << "Sample Median: " << median << endl;
 
@@ -403,7 +419,7 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
 
     cout << endl << endl;
     
-    cout << ":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Summary based on Measures of Dispersion:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl << endl;
+    cout << "\033[4m" << "\tSummary based on Measures of Dispersion" << "\033[0m" << endl << endl;
     cout << "Range of the dataset: " << range << endl; 
     cout << "Sample Variance: " << variance << endl;
     cout << "Sample Std. Deviation: " << standardDeviation << endl;
@@ -419,7 +435,7 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
     
     cout << endl << endl;
 
-    cout << ":::::::::::::::::::::::::::::::::::::::::::::::Measures of Asymmetry & Tails heaviness or lightness compared to normal distribution::::::::::::::::::::::::::::::::::::::::::" << endl << endl;
+    cout << "\033[4m" << "\tMeasures of Asymmetry & Tails heaviness or lightness compared to normal distribution" << "\033[0m" << endl << endl;
     
     cout << "Skewness value: " << skewness << endl;
     
@@ -458,7 +474,7 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
 
     cout << endl << endl;
 
-    cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Outlier Detection::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl << endl;
+    cout << "\033[4m" << "\tOutlier Detection" << "\033[0m" << endl << endl;
     cout << "Outliers(" << outliersUsingInterQuartileRange.size() << " values)" << " Using inter quartile range:"   << endl;
     if(outliersUsingInterQuartileRange.empty()){
         cout << "No outliers detected using IQR method!" << endl;
@@ -483,6 +499,7 @@ void summarizeOneVariableDataset(vector<double> &x,int size){
 }
 
 void summarizeTwoVariableDataset(vector<double> &x, vector<double> &y, int size){
+    cout << "\033[4m" << "\n\tSummarization of paired dataset" << "\033[0m" << endl;
     double pearsonCorelationCoefficient = calculatePerasonsCorelationCoefficient(x,y);
     double cohensD = calculateCohensD(x,y);
     vector<double> outliers = detectOutliersUsingZScore(x,y);
@@ -497,7 +514,7 @@ void summarizeTwoVariableDataset(vector<double> &x, vector<double> &y, int size)
     else{
         cout << "The sample data pairs are negatively co-related!" << endl;
     }
-    cout << "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::Summary Based on Cohen's d::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::" << endl;
+    cout << "\033[4m" << "\tSummary Based on Cohen's d" << "\033[0m" << endl;
     cout << "Cohen's d:" << cohensD << endl;
     cout << "Effect-Size Magnitude Summary:" << endl;
     if(fabs(cohensD) > 0.19 && fabs(cohensD) < 0.21){
@@ -517,9 +534,16 @@ void summarizeTwoVariableDataset(vector<double> &x, vector<double> &y, int size)
         cout << "It indicates that the second group (Y) has a higher mean than the first group (X)." << endl;
     }
 
-    cout << "Outliers:(" << outliers.size() << " values)" << endl;
-    for(int i = 0; i < outliers.size(); ++i){
-        cout << "(" << x[outliers[i]] << ", " << y[outliers[i]] << ")" << " ";
+    cout << "\033[4m" << "\tOutlier Detection" << "\033[0m" << endl;
+    if(outliers.size() != 0){
+        cout << "Outliers:(" << outliers.size() << " values)" << endl;
+        for(int i = 0; i < outliers.size(); ++i){
+            cout << "(" << x[outliers[i]] << ", " << y[outliers[i]] << ")" << " ";
+        }
+        cout << endl;
+    }else{
+        cout << "There is no outlier in this pair!" << endl;
     }
-    cout << endl;
 }
+
+#endif

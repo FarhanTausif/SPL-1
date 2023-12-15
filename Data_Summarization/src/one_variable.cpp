@@ -1,23 +1,21 @@
+#ifndef ONE_VARIABLE_CPP
+#define ONE_VARIABLE_CPP
+
 #include "../include/one_variable.h"
 #include<fstream>
-
-void generateOneVariableDataset(vector<double> &x){
-    srand(time(NULL));
-    double randomValue;
-    for(int i = 0; i < x.size(); ++i){
-        randomValue = (rand() % 500 + 1) / (double)(rand() % 10 + 1);
-        x[i] = randomValue;
-    }
-}
 
 void readOneVariableDatasetFromTxtFile(vector<double> &x){
     FILE *fp;
     fp = fopen("oneVariableDataset.txt", "r");
+    if(fp == NULL){
+        cerr << "ERROR OPENING FILE!" << endl;
+    }
     while(!feof(fp)){
         double data;
         fscanf(fp,"%lf", &data);
         x.push_back(data);
     }
+    fclose(fp);
 }
 
 void readOneVariableDatasetFromCsvFile(vector<double> &x){
@@ -31,21 +29,24 @@ void readOneVariableDatasetFromCsvFile(vector<double> &x){
         while(input >> data){
             x.push_back(data);
         }
-        //for(auto data : x) cout << data << endl;
         input.close();
     }
 }
 
-void writeOneVariableDatasetIntoFile(vector<double> &x){
-    FILE *fp;
-    fp = fopen("oneVariableDataset.txt","w");
-    if(!fp){
-        cerr << "Error opening the file!\n";
-        return;  
+void readOneVariableDataset(vector<double> &x, string filepath) {
+    ifstream input;
+    input.open(filepath);
+    if(input.fail()){
+        cerr << "ERROR OPENING THE FILE:" << filepath << endl;
+        input.close();
+    }else{
+        double value;
+        while(input >> value){
+            x.push_back(value);
+        }
+        input.close();
     }
-    for(int i = 0; i < x.size(); ++i){
-        fprintf(fp,"%7.2lf\n",x[i]);
-    }
-    fclose(fp);
 }
+
+#endif
 
