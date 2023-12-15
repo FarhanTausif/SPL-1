@@ -77,8 +77,8 @@ void anova_test(vector<vector<double>> &groups){
     double f_statistic = MSb / MSw;
     double f_alpha = calculateFAlpha((total - m), (m-1));
 
-    cout << "F_stat: " << f_statistic << endl;
-    cout << "F_alpha: " << f_alpha << endl;
+    cout << "F Statistic: " << f_statistic << endl;
+    cout << "Critical value: " << f_alpha << endl;
     
     if(f_statistic < f_alpha){
         cout << "We fail to reject the null hypothesis that all the groups have the mean!" << endl;
