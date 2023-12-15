@@ -79,6 +79,7 @@ void anova_test(vector<vector<double>> &groups){
 
     cout << "F_stat: " << f_statistic << endl;
     cout << "F_alpha: " << f_alpha << endl;
+    
     if(f_statistic < f_alpha){
         cout << "We fail to reject the null hypothesis that all the groups have the mean!" << endl;
     }else{
