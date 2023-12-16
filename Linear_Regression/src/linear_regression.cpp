@@ -44,6 +44,20 @@ void linear_regression(vector<double> &x, vector<double> &y){
         cout << estimate << " ";
     }
     cout << ")^T" << endl;
+    double Syy;
+    double y_sq = 0.0;
+    for(int i = 0; i < n; ++i){
+        y_sq += (y[i] * y[i]);
+    }
+
+    Syy = y_sq - n*(pow(y_bar,2));
+    double SSr = 0.0;
+    for(int i = 0; i < n; ++i){
+        SSr += pow((y[i] - beta0_hat - beta1_hat * x[i]), 2);
+    }
+    double R_Sq;
+    R_Sq = 1 - SSr/Syy;
+    cout << "This simple linear regression model explains " << R_Sq * 100 << "%" << " of the variation in the response values\n";
 }
 
 #endif
