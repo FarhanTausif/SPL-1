@@ -66,7 +66,6 @@ void start(){
                             cout << "Enter .xlsx file path: ";
                             cin >> excelFilePath;
                             const char* outputCsvFile = "x.csv";
-                            //string command = "ssconvert " + excelFilePath + " " + string(outputCsvFile);
                             const char* command = "ssconvert x.xls x.csv";
                             system(command);
                             readOneVariableDataset(x, string(outputCsvFile));
@@ -210,7 +209,6 @@ void start(){
                             cin >> txtFilePath;
                             readTwoVariableDataset(x, y, txtFilePath);
                             twoVariableDatasetSize = x.size();
-                            //summarizeTwoVariableDataset(x,y,twoVariableDatasetSize);
                         }else if(file_type == "csv"){
                             x.clear();
                             y.clear();
