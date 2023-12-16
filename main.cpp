@@ -35,38 +35,69 @@ void start(){
             case 1:
                 continueLoop = true;
                 while(continueLoop){
-                    cout << "\033[4m" << "\n\n\t\tData Summarization" << "\033[0m" << endl;
-                    cout << "1.Single-Variable Data summarization\n2.Two-Variable Data/Paired Data summarization\n3.Go to Main Menu(Press any numbers other than 1 & 2)" << endl;
+                    cout << "\033[1;35m" << "\033[4m" << "\n\n\t\tData Summarization" << "\033[0m" << "\033[1;0m" << endl;
+                    cout << "\033[1;32m" << "1.Single-Variable Data summarization\n2.Two-Variable Data/Paired Data summarization\n3.Go to Main Menu(Press any numbers other than 1 & 2)" << "\033[1;0m" << endl;
                     cout << "Enter your choice:";
                     cin >> choice;
                     if(choice == 1){
-                        int oneVariableDatasetSize; 
+                        single_var_data_summarization:
+                        int oneVariableDatasetSize;
                         string file_type = "";
-                        cout << "Enter file type: txt or csv" << endl;
+                        cout << "Enter file type: txt or csv or xlsx or xls" << endl;
                         cout << "File Type:";
                         cin >> file_type;
                         if(file_type == "txt"){
                             x.clear();
-                            readOneVariableDatasetFromTxtFile(x);
+                            string txtFilePath;
+                            cout << "Enter .txt file path: ";
+                            cin >> txtFilePath;
+                            readOneVariableDataset(x, txtFilePath);
                             oneVariableDatasetSize = x.size();
                         }else if(file_type == "csv"){
                             x.clear();
-                            readOneVariableDatasetFromCsvFile(x);
+                            string csvFilePath;
+                            cout << "Enter .csv file path: ";
+                            cin >> csvFilePath;
+                            readOneVariableDataset(x, csvFilePath);
                             oneVariableDatasetSize = x.size();
+                        }else if(file_type == "xlsx"){
+                            x.clear();
+                            string excelFilePath;
+                            cout << "Enter .xlsx file path: ";
+                            cin >> excelFilePath;
+                            const char* outputCsvFile = "x.csv";
+                            //string command = "ssconvert " + excelFilePath + " " + string(outputCsvFile);
+                            const char* command = "ssconvert x.xls x.csv";
+                            system(command);
+                            readOneVariableDataset(x, string(outputCsvFile));
+                            oneVariableDatasetSize = x.size();
+                        }else if(file_type == "xls"){
+                            x.clear();
+                            string excelFilePath;
+                            cout << "Enter .xls file path: ";
+                            cin >> excelFilePath;
+                            const char* outputCsvFile = "one.csv";
+                            string command = "ssconvert " + excelFilePath + " " + string(outputCsvFile);
+                            system(command.c_str());
+                            readOneVariableDataset(x, string(outputCsvFile));
+                            oneVariableDatasetSize = x.size();
+                        }else{
+                            cout << "Invalid file type! Try again\n";
+                            goto single_var_data_summarization;
                         }
                         stat_finder:
                         int option;
                         do{
-                            cout << "\033[4m" << "\n\nSelect Summarizing Method" << "\033[0m" << endl;
-                            cout << "1.Individual Statistic Finder\n2.Full Summarization\n3.Go to Data Summarization(Press any key other than 1 & 2)\n";
+                            cout << "\033[4m" << "\n\n\tSelect Summarizing Method" << "\033[0m" << endl;
+                            cout << "\033[1;33m" << "1.Individual Statistic Finder\n2.Full Summarization\n3.Go to Data Summarization(Press any key other than 1 & 2)\n" << "\033[1;0m";
                             cin.ignore();
                             cout << "option:";
                             cin >> option;
                             if(option == 1){
                                     cout << "\033[4m" << "\tIndividual Statistic Finder" << "\033[0m" << endl;
                                     cout << "Select Statistic:-" << endl;
-                                    cout << "1.Mean\n2.Median\n3.Mode\n4.Sample Standard Variance\n5.Sample Standard Deviation\n";
-                                    cout << "6.Quartiles\n7.Deciles\n8.Outliers\n9.Skewness\n10.Kurtosis\n";
+                                    cout <<"\033[1;34m" << "1.Mean\n2.Median\n3.Mode\n4.Sample Standard Variance\n5.Sample Standard Deviation\n";
+                                    cout << "6.Quartiles\n7.Deciles\n8.Outliers\n9.Skewness\n10.Kurtosis\n" << "\033[1;0m";
                                     int statistic;
                                     cout << "Enter statistic:";
                                     cin >> statistic;
@@ -165,24 +196,58 @@ void start(){
                         }while(option == 1 || option == 2);
 
                     }else if(choice == 2){
+                        paired_data_summarization:
                         int twoVariableDatasetSize; 
                         string file_type = "";
-                        cout << "Enter file type: txt or csv" << endl;
+                        cout << "Enter file type: txt or csv or xlsx or xls" << endl;
                         cout << "File Type:";
                         cin >> file_type;
                         if(file_type == "txt"){
                             x.clear();
                             y.clear();
-                            readTwoVariableDatasetFromTxtFile(x,y);
+                            string txtFilePath;
+                            cout << "Enter .txt file path: ";
+                            cin >> txtFilePath;
+                            readTwoVariableDataset(x, y, txtFilePath);
                             twoVariableDatasetSize = x.size();
-                            summarizeTwoVariableDataset(x,y,twoVariableDatasetSize);
+                            //summarizeTwoVariableDataset(x,y,twoVariableDatasetSize);
                         }else if(file_type == "csv"){
                             x.clear();
                             y.clear();
-                            readTwoVariableDatasetFromCsvFile(x,y);
+                            string csvFilePath;
+                            cout << "Enter .csv file path: ";
+                            cin >> csvFilePath;
+                            readTwoVariableDataset(x, y, csvFilePath);
                             twoVariableDatasetSize = x.size();
-                            summarizeTwoVariableDataset(x,y,twoVariableDatasetSize);
+                        }else if(file_type == "xlsx"){
+                            x.clear();
+                            y.clear();
+                            string excelFilePath;
+                            cout << "Enter .xlsx file path: ";
+                            cin >> excelFilePath;
+                            const char* outputCsvFile = "xy.csv";
+                            const char* command = "ssconvert xy.xls xy.csv";
+                            system(command);
+                            readTwoVariableDataset(x, y, string(outputCsvFile));
+                            twoVariableDatasetSize = x.size();
+                        }else if(file_type == "xls"){
+                            x.clear();
+                            y.clear();
+                            string excelFilePath;
+                            cout << "Enter .xls file path: ";
+                            cin >> excelFilePath;
+                            const char* outputCsvFile = "two.csv";
+                            string command = "ssconvert " + excelFilePath + " " + string(outputCsvFile);
+                            system(command.c_str());
+                            readTwoVariableDataset(x, y, string(outputCsvFile));
+                            twoVariableDatasetSize = x.size();
+                        }else{
+                            cout << "Invalid file type! Try again\n";
+                            goto paired_data_summarization;
                         }
+                        
+                        summarizeTwoVariableDataset(x,y,twoVariableDatasetSize);
+                    
                     }else {
                         continueLoop = false;
                         break;
@@ -194,8 +259,8 @@ void start(){
             case 2:
                 continueLoop = true;
                 while(continueLoop){
-                    cout << "\033[4m" << "\n\n\t\tHypothesis Testing" << "\033[0m" << endl;
-                    cout << "1.Z-Test\n2.T-Test\n3.F-Test\n4.Paired T test\n5.Go to Main Menu(Press any number other than 1 to 4)\n";
+                    cout << "\033[1;35m" << "\033[4m" << "\n\n\t\tHypothesis Testing" << "\033[0m" << endl << "\033[1;0m";
+                    cout << "\033[1;32m" << "1.Z-Test\n2.T-Test\n3.F-Test\n4.Paired T test\n5.Go to Main Menu(Press any number other than 1 to 4)\n" << "\033[1;0m";
                     cout << "Enter your choice:";
                     cin >> choice;
                     if (choice == 1){  
@@ -236,14 +301,14 @@ void start(){
                 break;
 
             case 3:
-                cout << "\033[4m" << "\n\n\t\tAnalysis Of Variance" << "\033[0m" << endl;
+                cout << "\033[1;35m" << "\033[4m" << "\n\n\t\tAnalysis Of Variance" << "\033[0m" << "\033[1;0m" << endl;
                 groups.clear();
                 read_groups(groups);
                 anova_test(groups);
                 break;
 
             case 4:
-                cout << "\033[4m" << "\n\n\t\tLinear Regression" << "\033[0m" << endl;
+                cout << "\033[1;35m" << "\033[4m" << "\n\n\t\tLinear Regression" << "\033[0m" << "\033[1;0m" << endl;
                 x.clear();
                 y.clear();
                 readTwoVariableDataset(x,y, "linear_regression.csv");
@@ -251,7 +316,7 @@ void start(){
                 break;
             
             default:
-                cout << "Thanks for using Stat-Inferno\n";
+                cout << "\033[1;39m" << "\n\t\tThanks for using Stat-Inferno\n" << "\033[1;0m";
                 continueOuterLoop = false;
                 break;
             }
@@ -266,9 +331,9 @@ void interface(){
         cout << string(boxWidth - 4 - projectTitle.length(), ' ');
         cout << " |" << endl;
         cout << "\t\t" << '+' << string(boxWidth - 2, '-') << '+' << endl;
-        cout << "1.Data Summarization\n";
+        cout << "\033[1;33m" << "1.Data Summarization\n";
         cout << "2.Hypothesis Testing\n";
         cout << "3.ANOVA Test\n";
         cout << "4.Linear Regression\n";
-        cout << "5.Quit(Press any number other than 1-4)\n";
+        cout << "5.Quit(Press any number other than 1-4)\n" << "\033[1;0m";
 }
