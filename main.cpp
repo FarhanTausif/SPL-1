@@ -7,28 +7,28 @@
 
 using namespace std;
 
-int main(){ 
-    vector<double> x;
-    vector<double> y;
-    vector<double> w;
-    vector<vector<double>> groups;
-    int choice; 
-    bool continueOuterLoop = true;
-    bool continueLoop = true;
+vector<double> x;
+vector<double> y;
+vector<double> w;
+vector<vector<double>> groups;
+int choice; 
+bool continueOuterLoop = true;
+bool continueLoop = true;
 
+/// @brief starts the program
+void start();
+
+/// @brief user interface
+void interface();
+
+int main(){ 
+    start();
+    return 0;
+}
+
+void start(){
     while(continueOuterLoop){
-        string projectTitle = "Stat-Inferno: Explorations of Statistical Inference";
-        const int boxWidth = projectTitle.length() + 4;
-        cout << "\n\n\t\t" << '+' << string(boxWidth - 2, '-') << '+' << endl;
-        cout << "\t\t| " << projectTitle;
-        cout << string(boxWidth - 4 - projectTitle.length(), ' ');
-        cout << " |" << endl;
-        cout << "\t\t" << '+' << string(boxWidth - 2, '-') << '+' << endl;
-        cout << "1.Data Summarization\n";
-        cout << "2.Hypothesis Testing\n";
-        cout << "3.ANOVA Test\n";
-        cout << "4.Linear Regression\n";
-        cout << "5.Quit(Press any number other than 1-4)\n";
+        interface();
         cout << "Enter your choice: ";
         cin >> choice;
         switch (choice) {
@@ -57,7 +57,7 @@ int main(){
                         stat_finder:
                         int option;
                         do{
-                            cout << "\n\nSelect Summarizing Method\n";
+                            cout << "\033[4m" << "\n\nSelect Summarizing Method" << "\033[0m" << endl;
                             cout << "1.Individual Statistic Finder\n2.Full Summarization\n3.Go to Data Summarization(Press any key other than 1 & 2)\n";
                             cin.ignore();
                             cout << "option:";
@@ -203,17 +203,17 @@ int main(){
                         readOneVariableDatasetFromTxtFile(x);
                         double null_hypothesis;
                         cout << "Enter the null hypothesis," << " \u00b5" << "0 = ";
-                        cin >> null_hypothesis;// 72
+                        cin >> null_hypothesis;
                         double sigma;
                         cout << "Enter the Population standard deviation," << " \u03c3" << " = ";
-                        cin >> sigma;// 87.66
+                        cin >> sigma;
                         twoSidedZTest(x, null_hypothesis, sigma);
                     }else if (choice == 2){
                         x.clear();  
                         readOneVariableDataset(x, "t_test.txt");
                         double null_hypothesis;
                         cout << "Enter the null hypothesis," << " \u00b5" << "0 = ";
-                        cin >> null_hypothesis;// 350
+                        cin >> null_hypothesis;
                         oneSided_t_Test(x, null_hypothesis);
                     }else if (choice == 3){
                         x.clear();  
@@ -255,7 +255,20 @@ int main(){
                 continueOuterLoop = false;
                 break;
             }
-        }
+    }
+}
 
-        return 0;
+void interface(){
+    string projectTitle = "Stat-Inferno: Explorations of Statistical Inference";
+        const int boxWidth = projectTitle.length() + 4;
+        cout << "\n\n\t\t" << '+' << string(boxWidth - 2, '-') << '+' << endl;
+        cout << "\t\t| " << projectTitle;
+        cout << string(boxWidth - 4 - projectTitle.length(), ' ');
+        cout << " |" << endl;
+        cout << "\t\t" << '+' << string(boxWidth - 2, '-') << '+' << endl;
+        cout << "1.Data Summarization\n";
+        cout << "2.Hypothesis Testing\n";
+        cout << "3.ANOVA Test\n";
+        cout << "4.Linear Regression\n";
+        cout << "5.Quit(Press any number other than 1-4)\n";
 }
